@@ -51,7 +51,7 @@ jobs:
                 -e POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}' \
                 -e POSTGRES_DB='book_store' \
                 -d postgres:17
-              docker exec -i book_store_db psql -U postgres -d book_store < ~/book_store/seeds/book_store.sql
+              docker exec -i book_store_db sh -c 'until pg_isready -q -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do sleep 1; done; exec psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < ~/book_store/seeds/book_store.sql
             fi
 
       - name: Build Docker image
@@ -82,4 +82,6 @@ jobs:
               --network book_store_network \
               --restart unless-stopped \
               -p 5001:5001 \
+              -e PGUSER='${{ secrets.POSTGRES_USER }}'
+              -e PGPASSWORD='${{ secrets.POSTGRES_PASSWORD }}'
               book_store:latest
