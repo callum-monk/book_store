@@ -20,7 +20,7 @@ jobs:
           username: "ec2-user"
           port: 22
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "./Dockerfile, ./*.py, ./requirements.txt, ./seeds, ./templates, ./static, ./lib"
+          source: "Dockerfile,app.py,requirements.txt,seeds,templates,lib"
           target: ~/book_store
 
       - name: Ensure Docker network exists
@@ -82,6 +82,6 @@ jobs:
               --network book_store_network \
               --restart unless-stopped \
               -p 5001:5001 \
-              -e PGUSER='${{ secrets.POSTGRES_USER }}'
-              -e PGPASSWORD='${{ secrets.POSTGRES_PASSWORD }}'
+              -e PGUSER='${{ secrets.POSTGRES_USER }}' \
+              -e PGPASSWORD='${{ secrets.POSTGRES_PASSWORD }}' \
               book_store:latest
