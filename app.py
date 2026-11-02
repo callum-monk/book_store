@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, redirect
 from lib.database_connection import DatabaseConnection
 from lib.book_repository import BookRepository
@@ -50,5 +51,6 @@ def create_user():
     return redirect('/books', code=302)
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    APP_HOST = os.getenv('APP_HOST', '0.0.0.0')
+    app.run(host=APP_HOST, port=5001, debug=True)
     
