@@ -7,3 +7,7 @@ CREATE TABLE users (
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 );
+
+INSERT INTO users (username, password) VALUES ('testuser', 'test123');
+INSERT INTO users (username, password) VALUES ('admin', 'admin');
+INSERT INTO users (username, password) VALUES ('johndoe', 'johnpw');

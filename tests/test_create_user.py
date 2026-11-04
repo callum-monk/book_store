@@ -16,7 +16,7 @@ def test_create_user_is_saved_to_database(db_connection):
     })
 
     assert response.status_code == 302
-
+    
     result = db_connection.execute("SELECT * FROM users WHERE username = 'testuser'")
 
     assert len(result) == 1

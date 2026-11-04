@@ -9,3 +9,14 @@ class UserRepository:
                                  [user.username, user.password]
                                  )
         return None
+
+    def find_by_username(self, username):
+        users_details = self._connection.execute(
+            'SELECT * FROM users WHERE username = %s', [username]
+        )
+
+        if not users_details:
+            return None
+
+        details = users_details[0]
+        return User(details["username"], details["password"], details["id"])
