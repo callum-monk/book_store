@@ -3,14 +3,18 @@ from lib.database_connection import DatabaseConnection
 from lib.pw_encryption import hash_pw, check_pw
 from lib.book_repository import BookRepository
 from lib.user_repository import UserRepository
+from flagsmith import Flagsmith
 from functools import wraps
 from lib.book import Book
 from lib.user import User
 import os
 
+
 app = Flask(__name__)
 app.secret_key = 'some_really_secret_key'
-
+flagsmith = Flagsmith(
+    environment_key=os.environ["FLAGSMITH_ENVIRONMENT_KEY"]
+)
 
 def login_required(f):
     @wraps(f)
@@ -91,6 +95,16 @@ def create_session():
             return redirect("/books")
     else:
         return redirect("/sessions/new")
+
+
+@app.route('/team', methods=['GET'])
+def get_team():
+    flags = flagsmith.get_environment_flags()
+    if flags.is_feature_enabled('new_page'):
+        return render_template('team.html')
+    else:
+        return redirect('/', code=302)
+
 
 if __name__ == '__main__':
     APP_HOST = os.getenv('APP_HOST', '0.0.0.0')
