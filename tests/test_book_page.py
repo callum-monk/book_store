@@ -31,7 +31,7 @@ def test_book_list(page: Page, db_connection):
 def test_form_input(page: Page, db_connection):
 	# Login
 	db_connection.execute("TRUNCATE TABLE users;")
-	db_connection.execute("INSERT INTO users (username, password) VALUES ('testuser', 'test123');")
+	db_connection.execute("INSERT INTO users (username, password) VALUES ('testuser', '$2b$12$Qr7vqYH9r0qiGpWo4jORBOBiVsm.fDpNA0afJ4P2DGxefvTARqFG2');")
 
 	page.goto("http://localhost:5001/sessions/new")
 	page.get_by_placeholder("Username").fill("testuser")

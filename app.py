@@ -1,12 +1,12 @@
-import os
 from flask import Flask, render_template, request, redirect, session
 from lib.database_connection import DatabaseConnection
+from lib.pw_encryption import hash_pw, check_pw
 from lib.book_repository import BookRepository
-from lib.book import Book
 from lib.user_repository import UserRepository
-from lib.user import User
 from functools import wraps
-
+from lib.book import Book
+from lib.user import User
+import os
 
 app = Flask(__name__)
 app.secret_key = 'some_really_secret_key'
@@ -62,7 +62,7 @@ def create_user():
     user_repository = UserRepository(connection)
 
     user_details = request.form
-    user = User(username=user_details['username'], password=user_details['password'])
+    user = User(username=user_details['username'], password=hash_pw(user_details['password']))
     user_repository.create(user)
 
     return redirect('/books', code=302)
@@ -84,10 +84,11 @@ def create_session():
 
     user = user_repository.find_by_username(username)
 
-    if user and user.password == password:
-        session["user_id"] = user.id
-        session["username"] = user.username
-        return redirect("/books")
+    if user is not None:
+        if check_pw(password, user.password):
+            session["user_id"] = user.id
+            session["username"] = user.username
+            return redirect("/books")
     else:
         return redirect("/sessions/new")
 
