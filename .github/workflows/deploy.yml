@@ -89,4 +89,5 @@ jobs:
               -p 5001:5001 \
               -e PGUSER='${{ secrets.POSTGRES_USER }}' \
               -e PGPASSWORD='${{ secrets.POSTGRES_PASSWORD }}' \
+              -e FLAGSHIP_ENVIRONMENT_KEY='${{ secrets.FLAGSMITH_ENVIRONMENT_KEY }}' \
               book_store:latest
